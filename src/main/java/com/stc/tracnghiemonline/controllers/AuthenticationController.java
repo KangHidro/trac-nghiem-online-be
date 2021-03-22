@@ -2,14 +2,19 @@ package com.stc.tracnghiemonline.controllers;
 
 import com.stc.tracnghiemonline.dtos.AccountDto;
 import com.stc.tracnghiemonline.dtos.TokenDetails;
+import com.stc.tracnghiemonline.dtos.user.UserDto;
+import com.stc.tracnghiemonline.entities.User;
 import com.stc.tracnghiemonline.exceptions.InvalidException;
 import com.stc.tracnghiemonline.exceptions.UserNotFoundAuthenticationException;
 import com.stc.tracnghiemonline.securities.JwtTokenUtils;
 import com.stc.tracnghiemonline.securities.JwtUserDetailsService;
 import com.stc.tracnghiemonline.securities.provider.UserAuthenticationToken;
 import com.stc.tracnghiemonline.services.user.UserService;
+import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
 
@@ -31,7 +37,7 @@ import java.util.HashMap;
  * Filename  : AuthenticationController
  */
 @RestController
-@RequestMapping("/rest/login")
+@RequestMapping("/rest")
 public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -54,7 +60,12 @@ public class AuthenticationController {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    @PostMapping
+    /***
+     * @author: thangpx
+     * @param dto: Dto login bằng tài khoản mật khẩu
+     * @return: token detail user login thành công
+     */
+    @PostMapping("/login")
     public ResponseEntity<TokenDetails> login(@RequestBody AccountDto dto) {
         UserAuthenticationToken authenticationToken = new UserAuthenticationToken(
                 dto.getUsername(),
@@ -72,7 +83,12 @@ public class AuthenticationController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/google")
+    /***
+     * @author: thangpx
+     * @param googleToken: access token google
+     * @return: token detail của user login thành công, nếu user chưa có tài khoản thì tạo luôn tài khoản cho user bằng email google
+     */
+    @PostMapping("/login/google")
     public ResponseEntity<TokenDetails> loginGoogle(@RequestHeader(name = "GoogleToken") String googleToken) {
         String urlRequest = googleVerifyUrl + googleToken;
         String email;
@@ -97,8 +113,72 @@ public class AuthenticationController {
     }
 
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> sayHello(Principal principal) {
-        return new ResponseEntity<>(principal.getName(), HttpStatus.OK);
+    /***
+     * @author: thangpx
+     * @param search: Từ khóa tìm kiếm theo email hoặc name
+     * @param page: Số trang, bắt đầu từ 0
+     * @param size: số phần tử trên 1 trang, default 20
+     * @param sort: chưa dùng tới, sort trên mongo
+     * @param column: ko dùng tới, sort trên mongo
+     * @return
+     */
+    @ApiOperation(value = "Get danh sách tài khoản phân trang cho admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/user/paging")
+    public ResponseEntity<Page<User>> getAllHocHamsPaging(
+            @RequestParam(name = "search", required = false, defaultValue = "") String search,
+            @RequestParam(name = "page", required = false, defaultValue = "${paging.default.page}") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "${paging.default.size}") int size,
+            @RequestParam(name = "sort", required = false, defaultValue = "asc") String sort,
+            @RequestParam(name = "column", required = false, defaultValue = "email") String column) {
+        return new ResponseEntity<>(userService.getUserPaging(search, page, size, sort, column), HttpStatus.OK);
+    }
+
+    /***
+     * @author: thangpx
+     * @param dto: Dto tạo tài khoản admin mới
+     * @return: Tài khoản admin mới được tạo
+     */
+    @ApiOperation(value = "Create new admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/user")
+    public ResponseEntity<User> createAdmin(@Valid @RequestBody UserDto dto) {
+        return new ResponseEntity<>(userService.createAdmin(dto), HttpStatus.OK);
+    }
+
+    /***
+     * @author: thangpx
+     * @param id: Id tài khoản cần lấy thông tin
+     * @return: Tài khoản có id cần tìm
+     */
+    @ApiOperation(value = "Get thông tin tài khoản by id")
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUser(@PathVariable String id) {
+        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
+    }
+
+    /***
+     * @author: thangpx
+     * @param id: ID tài khoản cần cập nhật thông tin
+     * @param dto: Dto cập nhật thông tin tài khoản (name, email, password)
+     * @return: Tài khoản đã được cập nhật thông tin thành công
+     */
+    @ApiOperation(value = "Admin cập nhật thông tin tài khoản (name, email, password)")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/user/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody UserDto dto) {
+        return new ResponseEntity<>(userService.updateUser(id, dto), HttpStatus.OK);
+    }
+
+    /***
+     * @author: thangpx
+     * @param id: Id tài khoản cần thay đổi trạng thái kích hoạt
+     * @return
+     */
+    @ApiOperation(value = "Admin thay đổi trạng thái kích hoạt tài khoản user")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<User> changeStatus(@PathVariable String id, Principal principal) {
+        return new ResponseEntity<>(userService.changeStatus(id, principal), HttpStatus.OK);
     }
 }
