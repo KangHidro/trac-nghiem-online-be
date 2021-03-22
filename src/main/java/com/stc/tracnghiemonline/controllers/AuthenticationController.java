@@ -76,12 +76,10 @@ public class AuthenticationController {
     public ResponseEntity<TokenDetails> loginGoogle(@RequestHeader(name = "GoogleToken") String googleToken) {
         String urlRequest = googleVerifyUrl + googleToken;
         String email;
-        String fullName;
         try {
             ResponseEntity<HashMap> responseEntity = restTemplate.exchange(urlRequest, HttpMethod.GET, null, HashMap.class);
             HashMap<String, String> map = responseEntity.getBody();
             email = map.get("email");
-            fullName = map.get("full_name");
         } catch (Exception ex) {
             throw new InvalidException("Token is Invalid");
         }
@@ -89,7 +87,7 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(authenticationToken);
         } catch (UserNotFoundAuthenticationException ex) {
-            userService.addNewUserCore(fullName, email, defaultPassword);
+            userService.addNewUserCore(null, email, defaultPassword);
         } catch (BadCredentialsException ex) {
             throw new InvalidException(ex.getMessage());
         }

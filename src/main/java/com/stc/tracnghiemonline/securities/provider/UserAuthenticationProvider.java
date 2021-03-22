@@ -1,11 +1,13 @@
 package com.stc.tracnghiemonline.securities.provider;
 
+import com.stc.tracnghiemonline.exceptions.UserNotFoundAuthenticationException;
 import com.stc.tracnghiemonline.securities.JwtUserDetailsService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * Created by: IntelliJ IDEA
@@ -28,7 +30,12 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String email = customAuth.getName();
         String passWord = customAuth.getCredentials() == null ? null : customAuth.getCredentials().toString();
         boolean verifyCredentials = Boolean.parseBoolean(customAuth.isVerifyCredentials().toString());
-        UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email);
+        UserDetails userDetails = null;
+        try {
+            userDetails = jwtUserDetailsService.loadUserByUsername(email);
+        } catch (UsernameNotFoundException ex) {
+            throw new UserNotFoundAuthenticationException(ex.getMessage());
+        }
         if (!userDetails.isEnabled())
             throw new BadCredentialsException("Tài khoản bị khóa ");
         if (verifyCredentials) { // check username password verify;
