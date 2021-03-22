@@ -1,7 +1,12 @@
 package com.stc.tracnghiemonline.repositories;
 
 import com.stc.tracnghiemonline.entities.CauHoiTracNghiem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
+import java.util.Optional;
 
 /**
  * Created by: IntelliJ IDEA
@@ -11,4 +16,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * Filename  : CauHoiTracNghiemRepository
  */
 public interface CauHoiTracNghiemRepository extends MongoRepository<CauHoiTracNghiem, String> {
+    @Query(value = "{'cauHoi': ?0}", sort = "{'cauHoi' : 1}")
+    Page<CauHoiTracNghiem> getCauHoiTracNghiemsPaging(String search, Pageable pageable);
+
+    @Query(value = "{ 'cauHoi': ?0 }")
+    Optional<CauHoiTracNghiem> timCauHoiTracNghiem(String cauHoi);
+
+    boolean existsByCauHoiIgnoreCase(String cauHoi);
 }

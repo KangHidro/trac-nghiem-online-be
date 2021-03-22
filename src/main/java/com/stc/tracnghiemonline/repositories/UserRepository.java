@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface UserRepository extends MongoRepository<User, String> {
 
     @Query(value = "{$or: [{'email' : { $regex: ?0, $options: 'i' } }, {'name' : { $regex: ?0, $options: 'i' } }] }"
-            , sort = "'enable' : -1, 'email' : 1")
+            , sort = "{'enable' : -1, 'email' : 1}")
     Page<User> getUserPaging(String search, Pageable pageable);
 
     @Query(value = "{'email' : ?0}")

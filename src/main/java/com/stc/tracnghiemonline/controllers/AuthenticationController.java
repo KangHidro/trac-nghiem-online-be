@@ -11,7 +11,6 @@ import com.stc.tracnghiemonline.securities.JwtUserDetailsService;
 import com.stc.tracnghiemonline.securities.provider.UserAuthenticationToken;
 import com.stc.tracnghiemonline.services.user.UserService;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -125,7 +124,7 @@ public class AuthenticationController {
     @ApiOperation(value = "Get danh sách tài khoản phân trang cho admin")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/paging")
-    public ResponseEntity<Page<User>> getAllHocHamsPaging(
+    public ResponseEntity<Page<User>> getUserPaging(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             @RequestParam(name = "page", required = false, defaultValue = "${paging.default.page}") int page,
             @RequestParam(name = "size", required = false, defaultValue = "${paging.default.size}") int size,
@@ -180,5 +179,11 @@ public class AuthenticationController {
     @DeleteMapping("/user/{id}")
     public ResponseEntity<User> changeStatus(@PathVariable String id, Principal principal) {
         return new ResponseEntity<>(userService.changeStatus(id, principal), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/hello")
+    public ResponseEntity<String> sayHello(Principal principal) {
+        return new ResponseEntity<>("Hello", HttpStatus.OK);
     }
 }
