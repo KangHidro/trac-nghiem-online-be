@@ -1,0 +1,66 @@
+package com.stc.tracnghiemonline.securities;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+/**
+ * Created by: IntelliJ IDEA
+ * User      : thangpx
+ * Date      : 3/22/21
+ * Time      : 10:23 PM
+ * Filename  : JwtUserDetails
+ */
+public class JwtUserDetails implements UserDetails {
+
+    private final String userName;
+
+    private final String passWord;
+
+    private final Collection<? extends GrantedAuthority> authorities;
+
+    private final boolean active;
+
+    public JwtUserDetails(String userName, String passWord, Collection<? extends GrantedAuthority> authorities, boolean active) {
+        this.userName = userName;
+        this.passWord = passWord;
+        this.authorities = authorities;
+        this.active = active;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return passWord;
+    }
+
+    @Override
+    public String getUsername() {
+        return userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return active;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
+}
