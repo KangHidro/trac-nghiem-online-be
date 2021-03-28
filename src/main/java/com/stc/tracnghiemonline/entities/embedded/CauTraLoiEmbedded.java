@@ -22,7 +22,5 @@ import java.util.Date;
 public class CauTraLoiEmbedded {
     private CauHoiTracNghiem cauHoiTracNghiem;
 
-    private boolean traLoiDung;
-
     private DapAnEmbedded cauTraLoi;
 }

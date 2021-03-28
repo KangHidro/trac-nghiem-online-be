@@ -44,7 +44,7 @@ public class KetQuaTracNghiemController {
         return new ResponseEntity<>(ketQuaTracNghiemService.submitKetQua(dto, principal.getName()), HttpStatus.OK);
     }
 
-    @GetMapping("/{{email:.+}}")
+    @GetMapping("/{email:.+}")
     public ResponseEntity<KetQuaTracNghiem> getKetQuaTracNghiem(@PathVariable String email) {
         return new ResponseEntity<>(ketQuaTracNghiemService.getKetQuaTracNghiem(email), HttpStatus.OK);
     }
