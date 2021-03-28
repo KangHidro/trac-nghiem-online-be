@@ -92,6 +92,7 @@ public class AuthenticationController {
     public ResponseEntity<TokenDetails> loginGoogle(@RequestHeader(name = "GoogleToken") String googleToken) {
         String urlRequest = googleVerifyUrl + googleToken;
         String email;
+        String fullName;
         try {
             ResponseEntity<HashMap> responseEntity = restTemplate.exchange(urlRequest, HttpMethod.GET, null, HashMap.class);
             HashMap<String, String> map = responseEntity.getBody();
@@ -148,13 +149,13 @@ public class AuthenticationController {
 
     /***
      * @author: thangpx
-     * @param id: Id tài khoản cần lấy thông tin
+     * @param principal: token tài khoản cần lấy thông tin
      * @return: Tài khoản có id cần tìm
      */
-    @ApiOperation(value = "Get thông tin tài khoản by id")
-    @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUser(@PathVariable String id) {
-        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
+    @ApiOperation(value = "Get thông tin tài khoản by token")
+    @GetMapping("/user/")
+    public ResponseEntity<User> getUser(Principal principal) {
+        return new ResponseEntity<>(userService.getUser(principal), HttpStatus.OK);
     }
 
     /***
@@ -182,21 +183,36 @@ public class AuthenticationController {
         return new ResponseEntity<>(userService.changeStatus(id, principal), HttpStatus.OK);
     }
 
+    /***
+     * @author: thangpx
+     * @param principal
+     * @return: Test login
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hello")
     public ResponseEntity<String> sayHello(Principal principal) {
         return new ResponseEntity<>("Hello", HttpStatus.OK);
     }
 
+    /***
+     * @author: thangpx
+     * @return: Get danh sách role từ enum role
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/role")
     public ResponseEntity<List<String>> getRoles() {
         return new ResponseEntity<>(userService.getRoles(), HttpStatus.OK);
     }
 
+    /***
+     * @author: thangpx
+     * @param principal: token user
+     * @param dto
+     * @return: Cập nhật tên cho user, trả về user đã được cập nhật thông tin do login google ko có name
+     */
     @ApiOperation(value = "User cập nhật thông tin tài khoản (name)")
-    @PutMapping("/user/name/{id}")
-    public ResponseEntity<User> updateName(@PathVariable String id, @Valid @RequestBody UserDto dto) {
-        return new ResponseEntity<>(userService.updateName(id, dto), HttpStatus.OK);
+    @PutMapping("/user/name")
+    public ResponseEntity<User> updateName(@Valid @RequestBody UserDto dto, Principal principal) {
+        return new ResponseEntity<>(userService.updateName(dto, principal), HttpStatus.OK);
     }
 }

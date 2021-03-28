@@ -50,9 +50,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String id) {
-        return userRepository.findByIdAndEnableTrue(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Tài khoản có id %s không tồn tại", id)));
+    public User getUser(Principal principal) {
+        return userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new NotFoundException(String.format("Tài khoản có email %s không tồn tại", principal.getName())));
     }
 
     @Override
@@ -128,9 +128,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateName(String id, UserDto dto) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Tài khoản có id %s không tồn tại", id)));
+    public User updateName(UserDto dto, Principal principal) {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new NotFoundException(String.format("Tài khoản có email %s không tồn tại", principal.getName())));
         user.setName(dto.getName());
         userRepository.save(user);
         return user;

@@ -19,7 +19,7 @@ public interface UserService {
 
     Page<User> getUserPaging(String search, int page, int size, String sort, String column);
 
-    User getUser(String id);
+    User getUser(Principal principal);
 
     User getUserCoreByEmail(String email);
 
@@ -33,5 +33,5 @@ public interface UserService {
 
     List<String> getRoles();
 
-    User updateName(String id, UserDto dto);
+    User updateName(UserDto dto, Principal principal);
 }

@@ -28,6 +28,15 @@ public class CauHoiTracNghiemController {
         this.cauHoiTracNghiemService = cauHoiTracNghiemService;
     }
 
+    /***
+     * @author: thangpx
+     * @param search: Từ khóa tìm kiếm câu hỏi trắc nghiệm
+     * @param page
+     * @param size
+     * @param sort
+     * @param column
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/paging")
     public ResponseEntity<Page<CauHoiTracNghiem>> getCauHoiTracNghiemPaging(
