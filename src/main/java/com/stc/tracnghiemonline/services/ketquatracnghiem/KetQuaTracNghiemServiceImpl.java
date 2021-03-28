@@ -85,7 +85,8 @@ public class KetQuaTracNghiemServiceImpl implements KetQuaTracNghiemService {
         ketQuaTracNghiemRepository.save(ketQuaTracNghiem);
 
         //TODO: Xóa kết quả trắc nghiệm cũ
-        ketQuaTracNghiemRepository.delete(ketQuaTracNghiemOld);
+        if (ketQuaTracNghiemOld != null)
+            ketQuaTracNghiemRepository.delete(ketQuaTracNghiemOld);
         return ketQuaTracNghiem;
     }
 
@@ -96,7 +97,7 @@ public class KetQuaTracNghiemServiceImpl implements KetQuaTracNghiemService {
             throw new InvalidException(String.format("Tài khoản có email %s không tồn tại", email));
         }
         return ketQuaTracNghiemRepository.getKetQuaTracNghiem(user.getId())
-                .orElseThrow(() -> new NotFoundException(String.format("Tài khoản %s chưa trả lời câu hỏi", user.getName())));
+                .orElse(null);
     }
 
     @Override
