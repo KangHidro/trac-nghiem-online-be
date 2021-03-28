@@ -3,6 +3,7 @@ package com.stc.tracnghiemonline.controllers;
 import com.stc.tracnghiemonline.dtos.ketquatracnghiem.KetQuaTracNghiemDto;
 import com.stc.tracnghiemonline.entities.KetQuaTracNghiem;
 import com.stc.tracnghiemonline.services.ketquatracnghiem.KetQuaTracNghiemService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,16 @@ public class KetQuaTracNghiemController {
         this.ketQuaTracNghiemService = ketQuaTracNghiemService;
     }
 
+    /***
+     * @author: thangpx
+     * @param search
+     * @param page
+     * @param size
+     * @param sort
+     * @param column
+     * @return: Danh sách kết quả trắc nghiệm phân trang cho admin
+     */
+    @ApiOperation(value = "Get danh sách câu trả lời phân trang cho admin")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/paging")
     public ResponseEntity<Page<KetQuaTracNghiem>> getCauHoiTracNghiemPaging(
@@ -39,16 +50,35 @@ public class KetQuaTracNghiemController {
         return new ResponseEntity<>(ketQuaTracNghiemService.getKetQuaTracNghiemPaging(search, page, size, sort, column), HttpStatus.OK);
     }
 
+    /***
+     * @author: thangpx
+     * @param dto: DTO submit kết quả trắc nghiệm
+     * @param principal: token user trả lời
+     * @return: Kết quả trắc nghiệm của user, 1 user chỉ có 1 kết quả trắc nghiệm mới nhất
+     */
+    @ApiOperation(value = "User submit câu hỏi trắc nghiệm, xóa bỏ submit trước đó")
     @PostMapping
     public ResponseEntity<KetQuaTracNghiem> submitKetQua(@Valid @RequestBody KetQuaTracNghiemDto dto, Principal principal) {
         return new ResponseEntity<>(ketQuaTracNghiemService.submitKetQua(dto, principal.getName()), HttpStatus.OK);
     }
 
+    /***
+     * @author: thangpx
+     * @param email: email user cần get kết quả trắc nghiệm
+     * @return: Kết quả trắc nghiệm của user
+     */
+    @ApiOperation(value = "Get kết quả trắc nghiệm by email")
     @GetMapping("/{email:.+}")
     public ResponseEntity<KetQuaTracNghiem> getKetQuaTracNghiem(@PathVariable String email) {
         return new ResponseEntity<>(ketQuaTracNghiemService.getKetQuaTracNghiem(email), HttpStatus.OK);
     }
 
+    /***
+     * @author: thangpx
+     * @param id: Id kết quả trắc nghiệm cần delete
+     * @return: Kết quả trắc nghiệm đã được xóa khỏi db
+     */
+    @ApiOperation(value = "Admin delete kết quả trắc nghiệm (xóa dưới db)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<KetQuaTracNghiem> deleteKetQuaTracNghiem(@PathVariable String id) {

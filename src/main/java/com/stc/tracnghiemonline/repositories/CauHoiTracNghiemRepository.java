@@ -19,8 +19,5 @@ public interface CauHoiTracNghiemRepository extends MongoRepository<CauHoiTracNg
     @Query(value = "{'cauHoi': { $regex: ?0, $options: 'i' } }", sort = "{'cauHoi' : 1}")
     Page<CauHoiTracNghiem> getCauHoiTracNghiemsPaging(String search, Pageable pageable);
 
-    @Query(value = "{ 'cauHoi': ?0 }")
-    Optional<CauHoiTracNghiem> timCauHoiTracNghiem(String cauHoi);
-
     boolean existsByCauHoiIgnoreCase(String cauHoi);
 }

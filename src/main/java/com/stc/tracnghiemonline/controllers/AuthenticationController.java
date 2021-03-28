@@ -65,6 +65,7 @@ public class AuthenticationController {
      * @param dto: Dto login bằng tài khoản mật khẩu
      * @return: token detail user login thành công
      */
+    @ApiOperation(value = "Login username, password")
     @PostMapping("/login")
     public ResponseEntity<TokenDetails> login(@RequestBody AccountDto dto) {
         UserAuthenticationToken authenticationToken = new UserAuthenticationToken(
@@ -88,6 +89,7 @@ public class AuthenticationController {
      * @param googleToken: access token google
      * @return: token detail của user login thành công, nếu user chưa có tài khoản thì tạo luôn tài khoản cho user bằng email google
      */
+    @ApiOperation(value = "Login google")
     @PostMapping("/login/google")
     public ResponseEntity<TokenDetails> loginGoogle(@RequestHeader(name = "GoogleToken") String googleToken) {
         String urlRequest = googleVerifyUrl + googleToken;
@@ -150,7 +152,7 @@ public class AuthenticationController {
     /***
      * @author: thangpx
      * @param principal: token tài khoản cần lấy thông tin
-     * @return: Tài khoản có id cần tìm
+     * @return: Tài khoản của user hiện tại
      */
     @ApiOperation(value = "Get thông tin tài khoản by token")
     @GetMapping("/user/")
@@ -188,6 +190,7 @@ public class AuthenticationController {
      * @param principal
      * @return: Test login
      */
+    @ApiOperation(value = "Test security")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hello")
     public ResponseEntity<String> sayHello(Principal principal) {
@@ -198,6 +201,7 @@ public class AuthenticationController {
      * @author: thangpx
      * @return: Get danh sách role từ enum role
      */
+    @ApiOperation(value = "Get danh sách role từ enum role")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/role")
     public ResponseEntity<List<String>> getRoles() {
