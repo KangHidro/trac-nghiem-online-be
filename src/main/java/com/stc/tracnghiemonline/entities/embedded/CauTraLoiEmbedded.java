@@ -24,5 +24,5 @@ public class CauTraLoiEmbedded {
 
     private boolean traLoiDung;
 
-    private String cauTraLoi;
+    private DapAnEmbedded cauTraLoi;
 }
