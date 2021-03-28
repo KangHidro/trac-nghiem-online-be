@@ -126,4 +126,13 @@ public class UserServiceImpl implements UserService {
     public List<String> getRoles() {
         return Arrays.stream(EnumRole.values()).map(Enum::name).collect(Collectors.toList());
     }
+
+    @Override
+    public User updateName(String id, UserDto dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Tài khoản có id %s không tồn tại", id)));
+        user.setName(dto.getName());
+        userRepository.save(user);
+        return user;
+    }
 }

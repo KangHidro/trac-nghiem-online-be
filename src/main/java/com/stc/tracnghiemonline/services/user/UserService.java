@@ -32,4 +32,6 @@ public interface UserService {
     User changeStatus(String id, Principal principal);
 
     List<String> getRoles();
+
+    User updateName(String id, UserDto dto);
 }

@@ -193,4 +193,10 @@ public class AuthenticationController {
     public ResponseEntity<List<String>> getRoles() {
         return new ResponseEntity<>(userService.getRoles(), HttpStatus.OK);
     }
+
+    @ApiOperation(value = "User cập nhật thông tin tài khoản (name)")
+    @PutMapping("/user/name/{id}")
+    public ResponseEntity<User> updateName(@PathVariable String id, @Valid @RequestBody UserDto dto) {
+        return new ResponseEntity<>(userService.updateName(id, dto), HttpStatus.OK);
+    }
 }
