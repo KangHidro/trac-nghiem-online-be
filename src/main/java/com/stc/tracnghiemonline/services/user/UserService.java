@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * Created by: IntelliJ IDEA
@@ -29,4 +30,6 @@ public interface UserService {
     User updateUser(String id, UserDto dto);
 
     User changeStatus(String id, Principal principal);
+
+    List<String> getRoles();
 }

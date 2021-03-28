@@ -1,6 +1,7 @@
 package com.stc.tracnghiemonline.controllers;
 
 import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.CauHoiTracNghiemDto;
+import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.ResponseCauHoiTracNghiemUserDto;
 import com.stc.tracnghiemonline.entities.CauHoiTracNghiem;
 import com.stc.tracnghiemonline.services.cauhoitracnghiem.CauHoiTracNghiemService;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ public class CauHoiTracNghiemController {
     }
 
     @GetMapping("/user/paging")
-    public ResponseEntity<Page<CauHoiTracNghiem>> getCauHoiTracNghiemPaging(
+    public ResponseEntity<Page<ResponseCauHoiTracNghiemUserDto>> getCauHoiTracNghiemPaging(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             @RequestParam(name = "soCau", required = false, defaultValue = "5") int soCau,
             @RequestParam(name = "page", required = false, defaultValue = "${paging.default.page}") int page,

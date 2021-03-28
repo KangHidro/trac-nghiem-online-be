@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,4 +37,6 @@ public class KetQuaTracNghiem {
     private int soCauTraLoiDung;
 
     private double tongDiem;
+
+    private Date thoiGianTraLoi = new Date();
 }

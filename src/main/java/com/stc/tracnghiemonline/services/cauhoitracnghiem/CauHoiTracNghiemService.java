@@ -1,6 +1,7 @@
 package com.stc.tracnghiemonline.services.cauhoitracnghiem;
 
 import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.CauHoiTracNghiemDto;
+import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.ResponseCauHoiTracNghiemUserDto;
 import com.stc.tracnghiemonline.entities.CauHoiTracNghiem;
 import org.springframework.data.domain.Page;
 
@@ -15,7 +16,7 @@ public interface CauHoiTracNghiemService {
 
     Page<CauHoiTracNghiem> getCauHoiTracNghiemPaging(String search, int page, int size, String sort, String column);
 
-    Page<CauHoiTracNghiem> getCauHoiTracNghiemPagingUser(String search, int soCau, int page, int size, String sort, String column);
+    Page<ResponseCauHoiTracNghiemUserDto> getCauHoiTracNghiemPagingUser(String search, int soCau, int page, int size, String sort, String column);
 
     CauHoiTracNghiem getCauHoiTracNghiem(String id);
 

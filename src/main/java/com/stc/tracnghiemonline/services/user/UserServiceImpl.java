@@ -18,6 +18,8 @@ import org.springframework.util.ObjectUtils;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by: IntelliJ IDEA
@@ -103,6 +105,7 @@ public class UserServiceImpl implements UserService {
                 getUserCoreByEmail(dto.getEmail().toLowerCase().trim()) == null) {
             user.setEmail(dto.getEmail().toLowerCase().trim());
         }
+        user.setRoles(dto.getRoles());
         userRepository.save(user);
         return user;
     }
@@ -117,5 +120,10 @@ public class UserServiceImpl implements UserService {
         user.setEnable(!user.isEnable());
         userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public List<String> getRoles() {
+        return Arrays.stream(EnumRole.values()).map(Enum::name).collect(Collectors.toList());
     }
 }

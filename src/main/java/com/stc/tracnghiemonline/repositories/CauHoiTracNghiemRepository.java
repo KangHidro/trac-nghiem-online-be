@@ -16,7 +16,7 @@ import java.util.Optional;
  * Filename  : CauHoiTracNghiemRepository
  */
 public interface CauHoiTracNghiemRepository extends MongoRepository<CauHoiTracNghiem, String> {
-    @Query(value = "{'cauHoi': ?0}", sort = "{'cauHoi' : 1}")
+    @Query(value = "{'cauHoi': { $regex: ?0, $options: 'i' } }", sort = "{'cauHoi' : 1}")
     Page<CauHoiTracNghiem> getCauHoiTracNghiemsPaging(String search, Pageable pageable);
 
     @Query(value = "{ 'cauHoi': ?0 }")

@@ -19,4 +19,6 @@ public class KetQuaTracNghiemController {
     public KetQuaTracNghiemController(KetQuaTracNghiemService ketQuaTracNghiemService) {
         this.ketQuaTracNghiemService = ketQuaTracNghiemService;
     }
+
+
 }

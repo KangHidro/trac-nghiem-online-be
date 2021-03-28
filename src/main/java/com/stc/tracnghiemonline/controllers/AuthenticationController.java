@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by: IntelliJ IDEA
@@ -185,5 +186,11 @@ public class AuthenticationController {
     @GetMapping("/hello")
     public ResponseEntity<String> sayHello(Principal principal) {
         return new ResponseEntity<>("Hello", HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/role")
+    public ResponseEntity<List<String>> getRoles() {
+        return new ResponseEntity<>(userService.getRoles(), HttpStatus.OK);
     }
 }

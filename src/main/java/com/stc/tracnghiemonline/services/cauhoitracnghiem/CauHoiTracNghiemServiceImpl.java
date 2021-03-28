@@ -1,6 +1,8 @@
 package com.stc.tracnghiemonline.services.cauhoitracnghiem;
 
 import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.CauHoiTracNghiemDto;
+import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.DapAnDto;
+import com.stc.tracnghiemonline.dtos.cauhoitracnghiem.ResponseCauHoiTracNghiemUserDto;
 import com.stc.tracnghiemonline.entities.CauHoiTracNghiem;
 import com.stc.tracnghiemonline.exceptions.InvalidException;
 import com.stc.tracnghiemonline.exceptions.NotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.data.mongodb.core.aggregation.SampleOperation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by: IntelliJ IDEA
@@ -50,7 +53,7 @@ public class CauHoiTracNghiemServiceImpl implements CauHoiTracNghiemService {
     }
 
     @Override
-    public Page<CauHoiTracNghiem> getCauHoiTracNghiemPagingUser(String search, int soCau, int page, int size, String sort, String column) {
+    public Page<ResponseCauHoiTracNghiemUserDto> getCauHoiTracNghiemPagingUser(String search, int soCau, int page, int size, String sort, String column) {
         long total = cauHoiTracNghiemRepository.count();
         if (total == 0) {
             throw new InvalidException("Danh sách câu hỏi rỗng");
@@ -65,7 +68,8 @@ public class CauHoiTracNghiemServiceImpl implements CauHoiTracNghiemService {
         Aggregation aggregation = Aggregation.newAggregation(matchStage);
         AggregationResults<CauHoiTracNghiem> results = mongoTemplate
                 .aggregate(aggregation, "cau-hoi-trac-nghiem", CauHoiTracNghiem.class);
-        List<CauHoiTracNghiem> cauHoiTracNghiems = results.getMappedResults();
+        List<ResponseCauHoiTracNghiemUserDto> cauHoiTracNghiems = results.getMappedResults()
+                .stream().map(this::convert).collect(Collectors.toList());
         return PageUtils.convertListToPage(cauHoiTracNghiems, PageUtils.createPageable(page, size, sort, column));
     }
 
@@ -111,5 +115,17 @@ public class CauHoiTracNghiemServiceImpl implements CauHoiTracNghiemService {
         CauHoiTracNghiem cauHoiTracNghiem = getCauHoiTracNghiem(id);
         cauHoiTracNghiemRepository.delete(cauHoiTracNghiem);
         return cauHoiTracNghiem;
+    }
+
+    private ResponseCauHoiTracNghiemUserDto convert(CauHoiTracNghiem cauHoiTracNghiem) {
+        ResponseCauHoiTracNghiemUserDto dto = new ResponseCauHoiTracNghiemUserDto();
+        dto.setId(cauHoiTracNghiem.getId());
+        dto.setCauHoi(cauHoiTracNghiem.getCauHoi());
+        dto.setDiemSo(cauHoiTracNghiem.getDiemSo());
+        List<DapAnDto> dapAns = cauHoiTracNghiem.getDapAns().stream()
+                .map(dapAnEmbedded -> new DapAnDto(dapAnEmbedded.getNoiDungCauTraLoi()))
+                .collect(Collectors.toList());
+        dto.setDapAns(dapAns);
+        return dto;
     }
 }

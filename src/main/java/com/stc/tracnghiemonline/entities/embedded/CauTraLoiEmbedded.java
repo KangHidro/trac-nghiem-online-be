@@ -25,6 +25,4 @@ public class CauTraLoiEmbedded {
     private boolean traLoiDung;
 
     private String cauTraLoi;
-
-    private Date thoiGianTraLoi = new Date();
 }
