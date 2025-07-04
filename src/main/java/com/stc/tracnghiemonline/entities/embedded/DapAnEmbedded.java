@@ -20,5 +20,5 @@ import lombok.Setter;
 public class DapAnEmbedded {
     private String noiDungCauTraLoi;
 
-    private boolean dapAnDung = false;
+    private boolean dapAnDung;
 }

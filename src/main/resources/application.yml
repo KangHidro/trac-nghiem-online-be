@@ -8,23 +8,39 @@ spring:
     active: ${ACTIVE_PROFILE:dev}
   servlet:
     multipart:
-      enabled: true
-      max-file-size: 10MB
-      max-request-size: 15MB
+      max-request-size: 215MB
+      max-file-size: 200MB
+  task:
+    execution:
+      pool:
+        core-size: 16
+        max-size: 5000
+        queue-capacity: 100
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_SERVICE_ADDRESS:http://localhost:8761/eureka}
+  instance:
+    hostname: trac-nghiem-online
+    prefer-ip-address: true
 
 jwt:
-  secret: K1LqzK6eeD0g0BfgOg7S
+  secret: tIxz87trwDocihTpj5ot
 
 default:
-  password: 123456
+  password: trac-nghiem-online-hcmute@2021
 
 paging:
   default:
     page: 0
     size: 20
 
+file:
+  download_dir: "./downloads"
+  upload_dir: "./uploads"
+
 google:
-  verifyUrl: https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=
+  verifyUrl: https://www.googleapis.com/oauth2/v3/userinfo?access_token=
 
 logging:
   level:
@@ -35,9 +51,29 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   logback:
     rollingpolicy:
+      max-file-size: 200MB
+      max-history: 30
       clean-history-on-start: true
-      max-file-size: 100MB
-      max-history: 7
+
+kafka:
+  bootstrap-servers: ${KAFKA_SERVERS:kafka:9094}
+  topic:
+    email-no-template: email-no-template
+    email-with-template: email-with-template
+    email-with-attachment: email-with-attachment
+
+feign:
+  hystrix:
+    enabled: true
+
+ribbon:
+  ConnectTimeout: 6000000
+  ReadTimeout: 12000000
+  eager-load:
+    enabled: true
+    clients: service-bar
 
 server:
-  port: 3456
+  error:
+    include-message: always
+  port: 2992

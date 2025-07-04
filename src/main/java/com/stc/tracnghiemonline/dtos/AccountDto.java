@@ -15,6 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AccountDto {
+
     private String username;
 
     private String password;

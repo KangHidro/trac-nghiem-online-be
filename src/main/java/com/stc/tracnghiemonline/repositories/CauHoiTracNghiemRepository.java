@@ -20,4 +20,7 @@ public interface CauHoiTracNghiemRepository extends MongoRepository<CauHoiTracNg
     Page<CauHoiTracNghiem> getCauHoiTracNghiemsPaging(String search, Pageable pageable);
 
     boolean existsByCauHoiIgnoreCase(String cauHoi);
+
+    Optional<CauHoiTracNghiem> findByCauHoiIgnoreCase(String cauHoi);
+
 }

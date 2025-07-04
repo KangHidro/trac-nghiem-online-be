@@ -1,6 +1,7 @@
 package com.stc.tracnghiemonline.entities;
 
 import com.stc.tracnghiemonline.entities.embedded.DapAnEmbedded;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class CauHoiTracNghiem {
     @Id
     private String id;
 
+    @ApiModelProperty(value = "Nội dung câu hỏi")
     private String cauHoi;
 
     private List<DapAnEmbedded> dapAns = new ArrayList<>();

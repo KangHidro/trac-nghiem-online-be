@@ -37,4 +37,10 @@ public class User {
     private List<String> roles = new ArrayList<>();
 
     private boolean enable = true;
+
+    public User(String email, String password, List<String> roles) {
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 }
